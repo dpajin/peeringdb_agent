@@ -33,14 +33,12 @@ st.title("PeeringDB AI Agent")
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
 
-#client = OpenAI(api_key=OPENAI_API_KEY)
-
 # Get system prompt 
 current_time = datetime.now()
 SYSTEM_PROMPT = f"""Current time is: {current_time}
 
 """
-#SYSTEM_PROMPT += peeringdb_utils.get_peeringdb_prompt()
+
 
 
 class Agent:
@@ -72,7 +70,7 @@ known_tools = {
 }
 
 
-def user_query_process(question, agent, st_m, max_turns=5):
+def user_query_process(question, agent, st_mp, max_turns=5):
     action_re = re.compile('^Action: ([a-z_0-9]+): (.*)$')   # python regular expression to selection action
     thought_re = re.compile('^Thought: (.*)$')
     i = 0
@@ -92,7 +90,7 @@ def user_query_process(question, agent, st_m, max_turns=5):
             if thought_re.match(line)
         ]
         if thought:
-            st_m.markdown(thought[0].groups()[0])
+            st_mp.markdown(thought[0].groups()[0])
         if actions:
             next_prompt = ""
             for n, a in enumerate(actions):
@@ -142,10 +140,11 @@ if user_question:
                 
         message_placeholder = st.empty()
         message_placeholder.markdown("Working on it, please wait...")
+        
         # Invoke the agent with the user input and current chat history
         try:
-            user_response = user_query_process(user_question, st.session_state.agent, st_m=message_placeholder, max_turns=5)
-            log.info(f"final response: {user_response}")
+            user_response = user_query_process(user_question, st.session_state.agent, st_mp=message_placeholder, max_turns=5)
+            log.info(f"Final response:\n{user_response}")
 
             # Add the response to the conversation history
             st.session_state.messages.append({"role": "assistant", "content": user_response})
