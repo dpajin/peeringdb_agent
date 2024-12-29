@@ -1,11 +1,9 @@
 import os
 import re
-import httpx    
 from openai import OpenAI
 import streamlit as st
 from dotenv import load_dotenv
 import requests
-import pandas as pd
 import json
 import logging
 import logging.config
@@ -59,7 +57,6 @@ class Agent:
     def execute(self):
         completion = self.client.chat.completions.create(
                         model=self.model,
-                        temperature=0,
                         messages=self.messages)
         return completion.choices[0].message.content
 

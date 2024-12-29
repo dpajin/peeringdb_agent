@@ -1,8 +1,4 @@
 streamlit
 openai
 python-dotenv
-tabulate
 requests
-pydantic
-typing
-
